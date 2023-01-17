@@ -6,6 +6,7 @@
 #include <limits>
 #include <string>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -82,6 +83,10 @@ bool compareEarnings(Product firstProduct, Product secondProduct) {
 
 bool comparePrice(Product firstProduct, Product secondProduct) {
     return firstProduct.getProductPrice() > secondProduct.getProductPrice();
+}
+
+bool compareAvailability(Product firstProduct, Product secondProduct) {
+    return firstProduct.getProductLeft() > secondProduct.getProductLeft();
 }
     
 class ProductsContainer {
@@ -342,6 +347,59 @@ public:
         }
     }
 
+    //Finds products that can be bought together for that price (Option 12)
+    void findAssortment(){
+        cout<<"Enter available funds: ";
+        float remainingFunds;
+        cin>>remainingFunds;
+        string purchasableProductList="";
+        int counter=0;
+        map<int, int> purchaseCount;
+        while(true){
+            bool somethingBought=false;
+            for(int i=0;i<products.size();i++){
+                if(remainingFunds>products[i].getProductPrice()){
+                    counter++;
+                    remainingFunds-=products[i].getProductPrice();
+                    purchaseCount[i]++;
+                    //purchasableProductList+=products[i].getProductName()+" for "+to_string(products[i].getProductPrice())+"\n";
+                    somethingBought=true;
+                }
+            }
+            if(!somethingBought)break;
+        }
+        
+        cout<<"You can buy "<<counter<<" product(s):\n";
+        for(auto i=purchaseCount.begin();i!=purchaseCount.end();i++){
+            Product& p =products[(*i).first];
+            int amount=(*i).second;
+            cout<<amount<<" of "<<p.getProductName()<<" for "<<p.getProductPrice()<<" each\n";
+        }
+    }
+
+    //Top 3 most available products (Option 13)
+    void topAvailable() {
+        vector<Product> tempProducts = this -> products;
+        sort(tempProducts.begin(), tempProducts.end(), compareAvailability);
+
+        for (int i = 0; i < 3 && i < tempProducts.size(); i++) {
+            cout << "\nTop " << i + 1 << " of most available: \n";
+            tempProducts[i].productPrint();
+        }
+    }
+
+    //Top 3 least available products (Option 14)
+    void topLeastAvailable() {
+        vector<Product> tempProducts = this->products;
+        sort(tempProducts.begin(), tempProducts.end(), compareAvailability);
+        reverse(tempProducts.begin(), tempProducts.end());
+
+        for (int i = 0; i < 3 && i < tempProducts.size(); i++) {
+            cout << "\nTop " << i + 1 << " of least available: \n";
+            tempProducts[i].productPrint();
+        }
+    }
+
     //Menu shown to the user
     void menu() {
         cout << "\nOption 1: Add a product/-s to stock" << endl;
@@ -355,6 +413,9 @@ public:
         cout << "Option 9: Top 3 most expensive products" << endl;
         cout << "Option 10: Top 3 cheapest products" << endl;
         cout << "Option 11: End program" << endl;
+        cout << "Option 12: Asortment" << endl;
+        cout << "Option 13: Top 3 least available products" << endl;
+        cout << "Option 14: Top 3 most available products" << endl;
         cout << "Choose an option (by typing a number): ";
     }
 };
@@ -369,7 +430,7 @@ int main() {
         products.menu();
         cin >> option;
         cout << "\nChosen Option: " << option << endl;
-        enum choices {One = 1, Two = 2, Three = 3, Four = 4, Five = 5, Six = 6, Seven = 7, Eight = 8, Nine = 9, Ten = 10, Eleven = 11};
+        enum choices {One = 1, Two = 2, Three = 3, Four = 4, Five = 5, Six = 6, Seven = 7, Eight = 8, Nine = 9, Ten = 10, Eleven = 11, Twelve=12, Thirteen=13, Fourteen=14};
 
         switch(option) {
             case One:
@@ -414,6 +475,15 @@ int main() {
                 break;
             case Eleven:
                 //End program
+                break;
+            case Twelve:
+                products.findAssortment();
+                break;
+            case Thirteen:
+                products.topAvailable();
+                break;
+            case Fourteen:
+                products.topLeastAvailable();
                 break;
             default:
                 cout << "Error: Choose one of the options!" << endl;
