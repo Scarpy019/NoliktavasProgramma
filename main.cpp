@@ -358,9 +358,10 @@ public:
         while(true){
             bool somethingBought=false;
             for(int i=0;i<products.size();i++){
-                if(remainingFunds>products[i].getProductPrice()){
+                if(remainingFunds>products[i].getProductPrice() && products[i].getProductLeft()>0){
                     counter++;
                     remainingFunds-=products[i].getProductPrice();
+                    products[i].setProductLeft(products[i].getProductLeft()-1);
                     purchaseCount[i]++;
                     //purchasableProductList+=products[i].getProductName()+" for "+to_string(products[i].getProductPrice())+"\n";
                     somethingBought=true;
