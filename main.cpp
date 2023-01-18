@@ -362,6 +362,7 @@ public:
                     counter++;
                     remainingFunds-=products[i].getProductPrice();
                     products[i].setProductLeft(products[i].getProductLeft()-1);
+                    products[i].setProductSold(products[i].getProductSold()+1);
                     purchaseCount[i]++;
                     //purchasableProductList+=products[i].getProductName()+" for "+to_string(products[i].getProductPrice())+"\n";
                     somethingBought=true;
@@ -415,8 +416,8 @@ public:
         cout << "Option 10: Top 3 cheapest products" << endl;
         cout << "Option 11: End program" << endl;
         cout << "Option 12: Asortment" << endl;
-        cout << "Option 13: Top 3 least available products" << endl;
-        cout << "Option 14: Top 3 most available products" << endl;
+        cout << "Option 13: Top 3 most available products" << endl;
+        cout << "Option 14: Top 3 least available products" << endl;
         cout << "Choose an option (by typing a number): ";
     }
 };
